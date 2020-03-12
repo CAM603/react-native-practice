@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, 
+  Text, 
+  View, 
+  Button, 
+  TextInput, 
+  ScrollView, 
+  FlatList,
+  TouchableOpacity
+} from 'react-native';
 
 export default function App() {
   const [name, setName] = useState('Cam');
@@ -21,7 +29,24 @@ export default function App() {
     {name: 'Violet', id: 7},
     {name: 'Black', id: 8}
   ])
+
+  const [animals, setAnimals] = useState([
+    {name: 'Dog', id: 1},
+    {name: 'Cat', id: 2},
+    {name: 'Fish', id: 3},
+    {name: 'Bear', id: 4},
+    {name: 'Wolf', id: 5},
+    {name: 'Bird', id: 6},
+    {name: 'Snake', id: 7},
+    {name: 'Frog', id: 8}
+  ])
   
+  const pressHandler = (id) => {
+    setAnimals((animals) => {
+      return animals.filter(animal => animal.id !== id)
+    })
+  }
+
   return (
     <View style={styles.container}>
       <Text>Enter Name:</Text>
@@ -53,13 +78,23 @@ export default function App() {
           </View>
         ))}
       </ScrollView>
+      <FlatList
+        numColumns={2}
+        keyExtractor={(item) => item.id}
+        data={animals}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => pressHandler(item.id)}>
+            <Text style={styles.item2}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0,
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     marginTop: 20
@@ -77,9 +112,16 @@ const styles = StyleSheet.create({
     width: 200
   },
   item: {
-    padding: 30,
-    fontSize: 24,
+    padding: 5,
+    fontSize: 14,
     backgroundColor: '#BADA22',
-    marginTop: 10
+    marginTop: 5
+  },
+  item2: {
+    padding: 5,
+    fontSize: 14,
+    backgroundColor: 'purple',
+    margin: 5,
+    color: 'white'
   }
 });
