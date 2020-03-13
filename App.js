@@ -1,127 +1,70 @@
 import React, { useState } from 'react';
-import { StyleSheet, 
-  Text, 
-  View, 
-  Button, 
-  TextInput, 
-  ScrollView, 
-  FlatList,
-  TouchableOpacity
-} from 'react-native';
+import { StyleSheet, Text, View, FlatList, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import Header from './components/Header';
+import TodoItem from './components/TodoItem';
+import AddTodo from './components/AddTodo';
 
 export default function App() {
-  const [name, setName] = useState('Cam');
-  const [food, setFood] = useState('Pizza');
-  const [age, setAge] = useState(26);
-  const [color, setColor] = useState('Blue')
-
-  const clickHandler = () => {
-    setColor(color === 'Blue' ? 'Green' : 'Blue')
-  }
-
-  const [colors, setColors] = useState([
-    {name: 'Red', id: 1},
-    {name: 'Orange', id: 2},
-    {name: 'Yellow', id: 3},
-    {name: 'Green', id: 4},
-    {name: 'Blue', id: 5},
-    {name: 'Indigo', id: 6},
-    {name: 'Violet', id: 7},
-    {name: 'Black', id: 8}
-  ])
-
-  const [animals, setAnimals] = useState([
-    {name: 'Dog', id: 1},
-    {name: 'Cat', id: 2},
-    {name: 'Fish', id: 3},
-    {name: 'Bear', id: 4},
-    {name: 'Wolf', id: 5},
-    {name: 'Bird', id: 6},
-    {name: 'Snake', id: 7},
-    {name: 'Frog', id: 8}
-  ])
-  
-  const pressHandler = (id) => {
-    setAnimals((animals) => {
-      return animals.filter(animal => animal.id !== id)
+  const [todos, setTodos] = useState([
+    { text: 'buy coffee', key: '1' },
+    { text: 'make coffee', key: '2' },
+    { text: 'drink coffee', key: '3' }
+  ]);
+  const deleteTodo = (key) => {
+    setTodos((todos) => {
+      return todos.filter(todo => todo.key !== key)
     })
   }
-
+  const pressHandler = (key) => {
+    Alert.alert('Are you sure you want to delete?', '', [
+      {text: 'Yes', onPress: () => deleteTodo(key)},
+      {text: 'No'},
+    ])
+  }
+  
+  const addTodo = (todo) => {
+    if(todo.length > 3) {
+      setTodos((todos) => {
+        return [...todos, { text: todo, key: (todos.length + 1).toString() }]
+      })
+    } else {
+      Alert.alert('Is that really something you need to do?')
+    }
+  }
+  console.log(todos)
   return (
-    <View style={styles.container}>
-      <Text>Enter Name:</Text>
-      <TextInput 
-        style={styles.input}
-        placeholder='ex: Bobbo'
-        onChangeText={(val) => setName(val)}/>
-      <Text>Change Favorite Food:</Text>
-      <TextInput 
-        style={styles.input}
-        placeholder='ex: pizza'
-        onChangeText={(val) => setFood(val)}/>
-      <Text>Change Age:</Text>
-      <TextInput
-        keyboardType='numeric'
-        style={styles.input}
-        placeholder='ex: 22'
-        onChangeText={(val) => setAge(val)}/>
-
-      <Text>My name is {name}, age: {age}, fav food: {food}</Text>
-      <Text>My favorite color: {color}</Text>
-      <View style={styles.buttonContainer}>
-        <Button title="update color" onPress={clickHandler}/>
-      </View>
-      <ScrollView>
-        {colors.map(color => (
-          <View key={color.id}>
-            <Text style={styles.item}>{color.name}</Text>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <Header/>
+        <View style={styles.content}>
+          <AddTodo
+            addTodo={addTodo}/>
+          <View style={styles.list}>
+            <FlatList
+            data={todos}
+            renderItem={({ item }) => (
+              <TodoItem 
+                item={item}
+                pressHandler={pressHandler}/>
+            )}
+            />
           </View>
-        ))}
-      </ScrollView>
-      <FlatList
-        numColumns={2}
-        keyExtractor={(item) => item.id}
-        data={animals}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => pressHandler(item.id)}>
-            <Text style={styles.item2}>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    marginTop: 20
+    backgroundColor: '#fff'
   },
-  buttonContainer: {
-    backgroundColor: 'cyan',
-    padding: 10,
-    margin: 10
+  content: {
+    padding: 40
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'blue',
-    padding: 8,
-    margin: 10,
-    width: 200
-  },
-  item: {
-    padding: 5,
-    fontSize: 14,
-    backgroundColor: '#BADA22',
-    marginTop: 5
-  },
-  item2: {
-    padding: 5,
-    fontSize: 14,
-    backgroundColor: 'purple',
-    margin: 5,
-    color: 'white'
+  list: {
+    marginTop: 40
   }
+  
 });
