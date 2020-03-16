@@ -24,7 +24,7 @@ export default function App() {
   }
   
   const addTodo = (todo) => {
-    if(todo.length > 3) {
+    if(todo.length > 2) {
       setTodos((todos) => {
         return [...todos, { text: todo, key: (todos.length + 1).toString() }]
       })
@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 40,
-    backgroundColor: 'cyan'
+    backgroundColor: '#E0FFFF'
   },
   list: {
     flex: 1,
     marginTop: 20,
-    backgroundColor: 'orange'
+    
   }
 });
