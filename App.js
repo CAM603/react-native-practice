@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, FlatList, Alert, TouchableWithoutFeedback, Keyb
 import Header from './components/Header';
 import TodoItem from './components/TodoItem';
 import AddTodo from './components/AddTodo';
+import SandBox from './components/SandBox';
 
 export default function App() {
   const [todos, setTodos] = useState([
@@ -33,6 +34,7 @@ export default function App() {
   }
   console.log(todos)
   return (
+    // <SandBox/>
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <Header/>
@@ -61,10 +63,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   content: {
-    padding: 40
+    flex: 1,
+    padding: 40,
+    backgroundColor: 'cyan'
   },
   list: {
-    marginTop: 40
+    flex: 1,
+    marginTop: 20,
+    backgroundColor: 'orange'
   }
-  
 });
